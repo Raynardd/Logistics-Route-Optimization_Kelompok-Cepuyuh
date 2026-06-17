@@ -39,6 +39,5 @@ def validate_required_columns(file_name, row, required_columns):
     missing = [column for column in required_columns if column not in row]
 
     if missing:
-        raise ValueError(f"File {file_name} tidak memiliki kolom wajib : {', ', join(missing)}")
-    
+        raise ValueError(f"File {file_name} tidak memiliki kolom wajib : {', '.join(missing)}")
     

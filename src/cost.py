@@ -65,9 +65,11 @@ def calculate_server_cost(execution_time_ms):
     return execution_time_ms * SERVER_COST_PER_MS
 
 def calculate_tco(fuel_cost, execution_time_ms):
-
+     
+     server_cost = calculate_server_cost(execution_time_ms)
      return {
         "fuel_cost": fuel_cost,
         "server_cost": server_cost,
         "tco": fuel_cost + server_cost,
     }
+
