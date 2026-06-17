@@ -1,0 +1,79 @@
+Titik Awal,Titik Akhir,Jarak,Waktu Tempuh
+JNE Sukamanah,JNE Sukamanah,0,0
+JNE Sukamanah,Skyland Apartment,"0,28",1
+JNE Sukamanah,Bale Siswa,"0,55",2
+JNE Sukamanah ,Guest House 65,"0,45",1
+JNE Sukamanah,Campaka Kost,"0,7",3
+JNE Sukamanah,Pondok Amaya,"0,35",1
+JNE Sukamanah,Kost Anggrek,"0,9",3
+JNE Sukamanah ,Pinewood,"1,3",5
+JNE Sukamanah,Pondok Setiawan,"0,45",2
+JNE Sukamanah,SMPN 1 Jatinangor,"0,23",1
+JNE Sukamanah,Awani Studento 1,"0,1",1
+JNE Sukamanah ,Sabar Subur,"0,85",4
+JNE Sukamanah,Louvin Apartment,"1,4",5
+Skyland Apartment,Bale Siswa,"0,75",3
+Skyland Apartment,Guest House 65,"0,65",2
+Skyland Apartment,Campaka Kost,"0,75",3
+Skyland Apartment,Pondok Amaya,"0,4",2
+Skyland Apartment,Kost Anggrek,"0,95",4
+Skyland Apartment,Pinewood,"1,3",6
+Skyland Apartment,Pondok Setiawan,"0,65",3
+Skyland Apartment,SMPN 1 Jatinangor,"0,4",2
+Skyland Apartment,Awani Studento 1,"0,2",1
+Skyland Apartment,Sabar Subur,"0,9",4
+Skyland Apartment,Louvin Apartment,"1,4",5
+Bale Siswa,Pondok Amaya,"0,85",3
+Bale Siswa,Kost Anggrek,"1,5",5
+Bale Siswa,Pinewood,"1,7",6
+Bale Siswa,Guest House 65,"0,7",3
+Bale Siswa,Campaka Kost,"1,3",5
+Bale Siswa,Pondok Setiawan,"0,25",2
+Bale Siswa,SMPN 1 Jatinangor,"0,55",2
+Bale Siswa,Awani Studento 1,"0,65",3
+Bale Siswa,Sabar Subur,"1,3",6
+Bale Siswa,Louvin Apartment,2,7
+Guest House 65,Pondok Setiawan,"0,65",2
+Guest House 65,SMPN 1 Jatinangor,"0,35",1
+Guest House 65,Campaka Kost,"1,1",4
+Guest House 65,Pondok Amaya,"0,75",2
+Guest House 65,Kost Anggrek,"1,3",4
+Guest House 65,Pinewood,"1,6",6
+Guest House 65,Awani Studento 1,"0,45",1
+Guest House 65,Sabar Subur,"1,2",5
+Guest House 65,Louvin Apartment,"1,7",6
+Campaka Kost,Pondok Amaya,"0,5",3
+Campaka Kost,Kost Anggrek,"0,3",2
+Campaka Kost,Pinewood,"0,75",4
+Campaka Kost,Pondok Setiawan,"1,2",5
+Campaka Kost,SMPN 1 Jatinangor,"0,95",4
+Campaka Kost,Awani Studento 1,"0,7",3
+Campaka Kost,Sabar Subur,"0,26",2
+Campaka Kost,Louvin Apartment,"0,9",3
+Pondok Amaya,Pinewood,"1,1",5
+Pondok Amaya,Pondok Setiawan,"0,75",3
+Pondok Amaya,SMPN 1 Jatinangor,"0,5",2
+Pondok Amaya,Awani Studento 1,"0,29",1
+Pondok Amaya,Sabar Subur,"0,55",3
+Pondok Amaya,Kost Anggrek,"0,75",3
+Pondok Amaya,Louvin Apartmen,"1,3",5
+Kost Anggrek,Pondok Setiawan,"1,7",5
+Kost Anggrek,SMPN 1 Jatinangor,"1,5",4
+Kost Anggrek,Awani Studento 1,"1,2",4
+Kost Anggrek,Sabar Subur,"0,55",3
+Kost Anggrek,Pinewood,"0,6",3
+Kost Anggrek,Louvin Apartment,"0,7",2
+Pinewood,Pondok Setiawan,"2,3",8
+Pinewood,SMPN 1 Jatinangor,"2,1",7
+Pinewood,Awani Studento 1,"1,8",6
+Pinewood,Sabar Subur,"1,1",5
+Pinewood,Louvin Apartment,"0,8",4
+Pondok Setiawan,Sabar Subur,"1,2",5
+Pondok Setiawan,Awani Studento 1,"0,45",2
+Pondok Setiawan,Louvin Apartment,"1,5",5
+SMPN 1 Jatinangor,Sabar Subur,1,4
+SMPN 1 Jatinangor,Louvin Apartment,"1,5",6
+SMPN 1 Jatinangor,Awani Studento 1,"0,24",1
+Awani Studento 1,Louvin Apartment,"0,35",2
+Awani Studento 1,Sabar Subur,"0,75",3
+Sabar Subur,Louvin Apartment,"1,1",5
