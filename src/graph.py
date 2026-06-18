@@ -30,8 +30,8 @@ class WeightedGraph:
         end_index = self.index_by_node[end]
         value = self.matrix[start_index][end_index]
 
-        if value == INF:
-            raise ValueError(f"Jarak tidak tersedia antara {start} dan {end}")
+        if value == float("INF"):
+            return float("INF")
 
         return value
 
