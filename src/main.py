@@ -12,13 +12,12 @@ def main():
         print("MENU SIMULASI OPTIMASI RUTE LOGISTIK")
         print("="*45)
         print("Pilih Skenario BBM:")
-        print("1. Skenario Subsidi (Harga Normal)")
-        print("2. Skenario Krisis (Harga Naik)")
-        print("3. Skenario Turun (Harga Turun)")
-        print("4. Bandingkan Semua Skenario")
+        print("1. Skenario Subsidi  (Rp 5.000/liter)")
+        print("2. Skenario Krisis   (Rp 20.000/liter)")
+        print("3. Bandingkan Kedua Skenario")
         print("0. Keluar")
         
-        pilihan_skenario = input("Masukkan pilihan (1/2/3/4/0): ")
+        pilihan_skenario = input("Masukkan pilihan (1/2/3/0): ")
         
         if pilihan_skenario == '0':
             print("Keluar dari program")
@@ -26,13 +25,11 @@ def main():
         
         selected_scenarios = []
         if pilihan_skenario == '1':
-            selected_scenarios = ["normal"]
+            selected_scenarios = ["subsidi"]
         elif pilihan_skenario == '2':
-            selected_scenarios = ["naik"]
+            selected_scenarios = ["krisis"]
         elif pilihan_skenario == '3':
-            selected_scenarios = ["turun"]
-        elif pilihan_skenario == '4':
-            selected_scenarios = ["turun", "normal", "naik"] 
+            selected_scenarios = ["subsidi", "krisis"]
         else:
             print("Pilihan tidak valid")
             continue
@@ -46,10 +43,13 @@ def main():
         
         if pilihan_paket == '1':
             package_file = "paket_50kg.csv"
+            vehicle_key = "beat"
         elif pilihan_paket == '2':
             package_file = "paket_75kg.csv"
+            vehicle_key = "nmax"
         elif pilihan_paket == '3':
             package_file = "paket_200kg.csv"
+            vehicle_key = "pick-up"
         else:
             print("Pilihan tidak valid")
             continue
@@ -58,7 +58,7 @@ def main():
         graph = build_graph([n for n in data["nodes"]], data["edges"])
         hub = "JNE Sukamanah"
         destinations = [p["destination"] for p in data["packages"]]
-        vehicle = data["vehicles"]["pick-up"]
+        vehicle = data["vehicles"][vehicle_key]
 
         for scenario in selected_scenarios:
             print(f"\n{'='*65}")

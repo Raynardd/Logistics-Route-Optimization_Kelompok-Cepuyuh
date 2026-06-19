@@ -1,6 +1,6 @@
 # Logistics Route Optimization: Heuristic vs Exact Algorithm Simulation
 
-Repositori ini berisi simulasi komparasi arsitektur algoritma pencarian rute (*Last-Mile Delivery*) untuk menentukan keputusan bisnis terkait infrastruktur teknologi perusahaan ekspedisi. Kami membandingkan algoritma **Greedy (Heuristik)** dan **Dynamic Programming Held-Karp (Eksak)** berdasarkan *Total Cost of Ownership* (TCO) yang mencakup biaya komputasi server awan dan biaya operasional bahan bakar minyak (BBM) dinamis.
+Repositori ini berisi simulasi komparasi arsitektur algoritma pencarian rute (*Last-Mile Delivery*) untuk menentukan keputusan bisnis terkait infrastruktur teknologi perusahaan ekspedisi. Kami membandingkan algoritma **Greedy dengan Backtracking (Heuristik)** dan **Dynamic Programming Held-Karp (Eksak)** berdasarkan *Total Cost of Ownership* (TCO) yang mencakup biaya komputasi server awan dan biaya operasional bahan bakar minyak (BBM) dinamis.
 
 ---
 
@@ -18,67 +18,115 @@ Berikut adalah alur waktu pengerjaan proyek oleh tim kami:
 
 | Tanggal | Target Pekerjaan |
 | :--- | :--- |
-| **Selasa, 16 Juni 2026** | <ul><li>`README.md` (Pemilihan Algoritma)</li></ul> |
+| **Selasa, 16 Juni 2026** | <ul><li>`README.md` (Pemilihan Algoritma & Struktur Repo)</li></ul> |
 | **Rabu, 17 Juni 2026** | <ul><li>Pemodelan data (Format CSV terpisah untuk matriks jarak dan beban paket)</li><li>Implementasi Algoritma Heuristik dan Eksak</li></ul> |
-| **Kamis, 18 Juni 2026** | <ul><li>Menggabungkan semua pekerjaan (Algoritma Heuristik dan Eksak)</li><li>*Finishing* `README.md`</li></ul> |
+| **Kamis, 18 Juni 2026** | <ul><li>Menggabungkan semua pekerjaan (Algoritma Heuristik dan Eksak)</li></ul> |
+| **Jumat, 19 Juni 2026** | <ul><li>*Finishing* dan Finalisasi Proyek</li></ul> |
 
----
+## 2. Visualisasi Graf Berbobot
 
-## 2. Cara Menjalankan Program
+Berikut adalah representasi visual dari struktur data **Graf Berbobot** (Adjacency Matrix) yang menjadi fondasi simulasi ini. Setiap titik biru adalah lokasi pelanggan, titik merah adalah Hub, dan setiap garis adalah jalur dengan bobot jarak dalam kilometer.
 
-Pastikan sistem Anda menggunakan minimal **Python 3.8**. Dataset (*nodes*, beban paket, dan matriks jarak) akan dibaca secara otomatis dari direktori `data/` dalam format `.csv`.
+![Graf Berbobot Jaringan Rute Last-Mile Delivery Jatinangor](docs/graph_visualization.png)
 
-Untuk menjalankan simulasi, gunakan *Command Line Interface* (CLI) berikut di terminal:
+## 3. Cara Menjalankan Program
 
-**Menjalankan Skenario Subsidi (Harga BBM Rp 5.000/liter):**
-> `python src/main.py --scenario subsidi`
+Pastikan sistem Anda menggunakan minimal **Python 3.8**. Dataset (*nodes*, beban paket, dan matriks jarak) akan dibaca secara otomatis dari direktori `data/` dalam format `.csv`. Tidak diperlukan instalasi *library* eksternal apapun.
 
-**Menjalankan Skenario Krisis (Harga BBM Rp 20.000/liter):**
-> `python src/main.py --scenario krisis`
+**Jalankan program dari *root* repositori:**
+```bash
+python src/main.py
+```
 
-*(Catatan: Anda juga bisa menggunakan argumen `--scenario all` untuk menjalankan dan membandingkan kedua skenario sekaligus secara berdampingan).*
+Program akan menampilkan menu interaktif di terminal:
 
----
+```
+=============================================
+MENU SIMULASI OPTIMASI RUTE LOGISTIK
+=============================================
+Pilih Skenario BBM:
+1. Skenario Subsidi  (Rp 5.000/liter)
+2. Skenario Krisis   (Rp 20.000/liter)
+3. Bandingkan Kedua Skenario
+0. Keluar
 
-## 3. Pemilihan Algoritma & Trade-Off
+Masukkan pilihan (1/2/3/0):
+
+Pilih Paket:
+1. Paket 50kg
+2. Paket 75kg
+3. Paket 200kg
+```
+
+> **Catatan:** Semua parameter (lokasi, bobot paket, harga BBM, skenario) dibaca dari file `.csv` di direktori `data/` dan **tidak ada nilai yang di-hardcode** di dalam logika program utama.
+
+## 4. Pemilihan Algoritma & Trade-Off
 
 Dalam simulasi ini, kami memilih dua pendekatan algoritma yang bertolak belakang untuk memperlihatkan *trade-off* antara kecepatan eksekusi komputasi dan optimalitas jarak rute:
 
-### A. Algoritma Heuristik (Greedy)
-Kami mengimplementasikan algoritma **Greedy** murni. Pada setiap *node*, kurir akan selalu memilih lokasi pelanggan terdekat berikutnya yang belum dikunjungi tanpa memikirkan konsekuensi jarak rute setelahnya.
-*   **Kelebihan:** Sangat ringan dan secepat kilat. Biaya *Cloud Server* (berbasis eksekusi per milidetik) hampir mendekati angka nol.
-*   **Trade-off:** Sering terjebak dalam *local optimum*. Hasil rute akhir biasanya sub-optimal dan zigzag. Hal ini menyebabkan jarak tempuh total memanjang dan konsumsi BBM menjadi sangat boros, terutama pada awal rute saat beban paket masih penuh.
+### A. Algoritma Heuristik (Greedy + Backtracking)
+Kami mengimplementasikan algoritma **Greedy** yang diperkuat dengan mekanisme *backtracking*. Pada setiap *node*, algoritma memilih lokasi pelanggan terdekat yang belum dikunjungi. Jika algoritma menemui jalan buntu (*dead-end*) karena tidak ada jalur langsung ke node berikutnya, mekanisme *backtracking* akan mundur dan mencoba kandidat terdekat berikutnya hingga rute lengkap ditemukan.
+
+*   **Kelebihan:** Sangat ringan dan cepat. Biaya *Cloud Server* (berbasis eksekusi per milidetik) hampir mendekati nol, terbukti di bawah **Rp 100** untuk semua skenario.
+*   **Trade-off:** Berpotensi terjebak dalam *local optimum*. Hasil rute akhir bisa sub-optimal karena tidak mempertimbangkan konsekuensi jarak jangka panjang dari setiap pilihan.
 
 ### B. Algoritma Eksak (Dynamic Programming - Held-Karp)
-Sebagai algoritma penentu rute absolut, kami mengimplementasikan **DP Held-Karp** dengan *Memoization*. Algoritma ini memecah graf menjadi sub-masalah dengan mengingat rute terpendek untuk sebuah *subset node* yang sudah dikunjungi.
+Sebagai algoritma penentu rute absolut, kami mengimplementasikan **DP Held-Karp** dengan *Memoization*. Algoritma ini memecah masalah TSP menjadi sub-masalah dengan mengingat jarak minimum untuk setiap *subset node* yang sudah dikunjungi menggunakan representasi *bitmask*.
+
 *   **Kelebihan:** Dijamin 100% menghasilkan rute paling efisien secara matematis dan menekan pengeluaran BBM semaksimal mungkin.
-*   **Trade-off:** Sangat boros *resource* komputasi. Waktu eksekusinya bertumbuh secara eksponensial seiring bertambahnya *node* pelanggan, yang akan memicu lonjakan tagihan *Cloud Server Pay-as-you-go*. Metode ini juga memakan memori (RAM) tinggi karena harus menyimpan berbagai status/percabangan di dalam *tabel memori* DP.
+*   **Trade-off:** Sangat boros *resource* komputasi. Waktu eksekusinya bertumbuh secara eksponensial seiring bertambahnya *node* pelanggan (~127 ms pada 12 node), yang memicu lonjakan tagihan *Cloud Server Pay-as-you-go* hingga **Rp 6.300 – Rp 7.300** per satu kali pengiriman.
 
----
-
-## 4. Analisis Kompleksitas (Big-O)
+## 5. Analisis Kompleksitas (Big-O)
 
 Berdasarkan penelusuran struktur rekursif dan iterasi *loop* pada *source code* utama kami, berikut adalah analisis teoritis untuk metrik ruang dan waktu:
 
-*   **Greedy Algorithm (Heuristik)**
+*   **Greedy + Backtracking (Heuristik)**
     *   **Kompleksitas Waktu:** $O(n^2)$
-        Pada graf dengan $n$ titik lokasi, algoritma harus melakukan iterasi dari titik saat ini ke maksimal $(n-1)$ *node* tetangga untuk mencari titik terdekat. Proses seleksi ini diulang sebanyak $n$ kali sampai seluruh *node* pelanggan dikunjungi.
+        Pada setiap langkah dari $n$ total *node*, algoritma melakukan iterasi ke semua *node* yang belum dikunjungi untuk mencari yang terdekat. Mekanisme *backtracking* tidak mengubah kompleksitas asimtotik karena pada praktiknya jarang aktif di graf yang terhubung dengan baik.
     *   **Kompleksitas Ruang (Memori):** $O(n)$
-        Algoritma ini beroperasi secara *in-place* dan hanya membutuhkan ruang memori ekstra minimum untuk menyimpan struktur data *array* (sebagai penanda *node* mana saja yang sudah dilewati).
+        Hanya membutuhkan ruang ekstra untuk menyimpan set *node* yang belum dikunjungi dan *call stack* rekursi dengan kedalaman maksimal $n$.
 
 *   **DP Held-Karp (Eksak)**
     *   **Kompleksitas Waktu:** $O(n^2 \cdot 2^n)$
-        Algoritma mengevaluasi $2^n$ kemungkinan *subset node*. Untuk setiap kombinasi *subset*, program akan melakukan iterasi pada $n$ *node* terakhir yang dikunjungi dan mencari *node* perantara sebelumnya. Meskipun jauh lebih optimal daripada $O(n!)$ milik algoritma *Backtracking* murni, waktu eksekusinya tetap berada di ranah eksponensial.
+        Algoritma mengevaluasi $2^n$ kemungkinan *subset node* (direpresentasikan sebagai *bitmask*). Untuk setiap kombinasi *subset*, program melakukan iterasi pada $n$ *node* sebagai kandidat langkah berikutnya. Meskipun jauh lebih optimal dari $O(n!)$ milik *Brute Force* murni, waktu eksekusinya tetap berada di ranah eksponensial.
     *   **Kompleksitas Ruang (Memori):** $O(n \cdot 2^n)$
-        Penggunaan ruang sangat masif karena program bergantung pada *memoization table*. Tabel ini diwajibkan menyimpan nilai jarak minimum untuk setiap kemungkinan status kombinasi (*subset node* yang dikunjungi, *node* terakhir yang disinggahi).
+        Penggunaan ruang sangat masif karena program bergantung pada *memoization table* yang menyimpan nilai jarak minimum untuk setiap kemungkinan status `(bitmask_dikunjungi, node_posisi_saat_ini)`.
 
----
+## 6. Summary & Keputusan Bisnis
 
-## 5. Summary & Keputusan Bisnis
+Berikut adalah grafik dan tabel hasil simulasi penuh pada seluruh kombinasi kendaraan, paket, dan skenario BBM:
 
-Berdasarkan hasil eksekusi simulasi kami pada dua kondisi ekonomi yang berbeda, arsitektur algoritma logistik harus diputuskan secara dinamis mengikuti fluktuasi harga bahan bakar:
+![Perbandingan TCO Greedy vs Held-Karp](docs/tco_comparison.png)
 
-1.  **Skenario Subsidi (Rp 5.000/liter):** Algoritma **Greedy** adalah pilihan paling logis. Penghematan bensin dari rute optimal DP Held-Karp tidak mampu menutupi mahalnya biaya tagihan *Cloud Server* yang meroket hingga mencapai **[Rp blablablabla]**.
-2.  **Skenario Krisis (Rp 20.000/liter):** Algoritma **Eksak (DP Held-Karp)** terbukti berbalik menguntungkan. Kerugian akibat melonjaknya biaya komputasi server sebesar **[Rp blablablabla]** berhasil dikompensasi dengan sukses oleh penghematan BBM signifikan yang mencapai **[Rp blablablabla]**.
+| Kendaraan | Skenario | Waktu Greedy | TCO Greedy | Waktu HK | TCO Held-Karp | Pemenang |
+|:---|:---|---:|---:|---:|---:|:---:|
+| Beat (50 kg) | Subsidi — Rp 5.000/L | 0,09 ms | **Rp 736** | 164,84 ms | Rp 8.863 | ✅ Greedy |
+| Beat (50 kg) | Krisis — Rp 20.000/L | 0,09 ms | **Rp 2.930** | 164,84 ms | Rp 10.727 | ✅ Greedy |
+| NMax (75 kg) | Subsidi — Rp 5.000/L | 0,08 ms | **Rp 1.141** | 202,81 ms | Rp 11.129 | ✅ Greedy |
+| NMax (75 kg) | Krisis — Rp 20.000/L | 0,08 ms | **Rp 4.552** | 202,81 ms | Rp 14.095 | ✅ Greedy |
+| Pick-up (200 kg) | Subsidi — Rp 5.000/L | 0,08 ms | **Rp 2.898** | 187,61 ms | Rp 11.880 | ✅ Greedy |
+| Pick-up (200 kg) | Krisis — Rp 20.000/L | 0,08 ms | **Rp 11.579** | 187,61 ms | Rp 19.379 | ✅ Greedy |
 
-**Titik Break-Even (BEP):** Dari analisis perhitungan *Total Cost of Ownership* (TCO), implementasi algoritma DP Held-Karp baru masuk akal secara finansial dan menguntungkan untuk di-*deploy* di server produksi ketika harga BBM telah menyentuh batas **[Rp blablablabla] per liter**. Selama harga BBM masih berada di bawah nominal tersebut, manajemen disarankan untuk tetap menggunakan algoritma Heuristik.
+> *Greedy menghasilkan rute **6,51 km**, Held-Karp menghasilkan rute optimal **5,51 km** (selisih ~1 km / ~15%).*
+
+### Kesimpulan Keputusan Bisnis
+
+1.  **Skenario Subsidi (Rp 5.000/liter):** Algoritma **Greedy** adalah pilihan yang jauh lebih logis. Meski Held-Karp berhasil memangkas jarak rute sebesar ~15%, penghematan BBM yang dihasilkan hanya berkisar **Rp 92 – Rp 360** sehingga tidak mampu menutup *overhead* biaya *Cloud Server* Held-Karp yang mencapai **Rp 6.300 – Rp 7.300** per pengiriman.
+
+2.  **Skenario Krisis (Rp 20.000/liter):** Algoritma **Greedy tetap menang** secara TCO. Bahkan di harga BBM tertinggi sekalipun, penghematan BBM Held-Karp hanya mencapai **Rp 370 – Rp 1.439**, masih jauh di bawah *overhead* server-nya.
+
+### Titik Break-Even (BEP)
+
+Dari analisis *Total Cost of Ownership*, implementasi Held-Karp baru akan menguntungkan secara finansial ketika:
+
+$$P_{BEP} = \frac{\Delta \text{Biaya Server}}{\Delta \text{Konsumsi Liter}} = \frac{\text{Server}_{HK} - \text{Server}_{Greedy}}{\text{Liter}_{Greedy} - \text{Liter}_{HK}}$$
+
+| Kendaraan | BEP Harga BBM |
+|:---|---:|
+| Beat (50 kg) | **Rp 338.344/liter** |
+| NMax (75 kg) | **Rp 216.927/liter** |
+| Pick-up (200 kg) | **Rp 88.380/liter** |
+
+**Interpretasi:** Harga BBM di Indonesia (bahkan dalam kondisi krisis ekstrem sekalipun) tidak akan pernah mendekati nilai BEP tersebut. Kesimpulan finalnya: **untuk skala operasional rute pendek seperti *last-mile delivery* di area Jatinangor (~6 km, 12 titik), algoritma Greedy dengan Backtracking adalah pilihan arsitektur yang paling rasional secara finansial dalam kondisi ekonomi apapun.**
+
+Held-Karp baru akan relevan dipertimbangkan apabila skala operasional membesar secara signifikan seperti misalnya, rute antar kota dengan puluhan node yang di mana selisih jarak yang dihasilkan menjadi puluhan hingga ratusan km, sehingga penghematan BBM-nya baru mampu mengkompensasi biaya komputasinya yang mahal.
